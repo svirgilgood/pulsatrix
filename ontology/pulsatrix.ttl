@@ -1,196 +1,166 @@
+@prefix : <https://svirgil.github.io/pulsatrix/o/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix openwemi: <https://ns.dublincore.org/openwemi/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pulsatrix: <https://svirgil.github.io/pulsatrix/o/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix dct: <http://purl.org/dc/terms/> .
-@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix openwemi: <https://ns.dublincore.org/openwemi/> .
-@prefix pulsatrix: <https://svirgil.github.io/pulsatrix/o/> .
 @prefix rel: <http://id.loc.gov/vocabulary/relators/> .
-@prefix : <https://svirgil.github.io/pulsatrix/o/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xs: <http://www.w3.org/2001/XMLSchema#> .
 
+dct:contribution
+  a owl:ObjectProperty ;
+  .
 
 openwemi:Endeavor
-  rdfs:subClassOf :Endeavor .
+  rdfs:subClassOf pulsatrix:Endeavor ;
+  .
 
-:Endeavor
+openwemi:Expression
+  rdfs:subClassOf pulsatrix:Expression ;
+  .
+
+openwemi:Item
+  rdfs:subClassOf pulsatrix:Item ;
+  .
+
+openwemi:Manifestation
+  rdfs:subClassOf pulsatrix:Manifestation ;
+  .
+
+openwemi:Work
+  rdfs:subClassOf pulsatrix:Work ;
+  .
+
+pulsatrix:AdvisoryContribution
+  rdfs:subClassOf pulsatrix:ContributionCategory ;
+  skos:prefLabel "Advisory Contribution" ;
+  .
+
+pulsatrix:Agent
+  a owl:Class ;
+  skos:definition "an active party in participating in some activity." ;
+  skos:prefLabel "Agent" ;
+  .
+
+pulsatrix:Category
+  rdfs:subClassOf pulsatrix:Concept ;
+  skos:definition "A larger group that something can be classified with." ;
+  skos:prefLabel "Category" ;
+  .
+
+pulsatrix:Concept
+  a owl:Class ;
+  skos:definition "An abstract, unifying idea or theme." ;
+  skos:prefLabel "Concept" ;
+  .
+
+pulsatrix:Contribution
+  a owl:Class ;
+  owl:equivalentClass [
+    a owl:Class ;
+    owl:intersectionOf (
+      pulsatrix:Concept
+      [
+        a owl:Restriction ;
+        owl:onProperty pulsatrix:role ;
+        owl:someValuesFrom rel:Relator ;
+      ]
+      [
+        a owl:Restriction ;
+        owl:onProperty pulsatrix:agent ;
+        owl:someValuesFrom pulsatrix:Agent ;
+      ]
+    ) ;
+  ] ;
+  skos:definition "A contribution relationship to an item." ;
+  skos:prefLabel "Contribution" ;
+  .
+
+pulsatrix:ContributionCategory
+  rdfs:subClassOf pulsatrix:Category ;
+  skos:definition "The taxonomy for how the agent contributed to the Endeavor." ;
+  skos:prefLabel "Contribution Category" ;
+  .
+
+pulsatrix:CreationContribution
+  rdfs:subClassOf pulsatrix:ContributionCategory ;
+  skos:prefLabel "Creation Contribution" ;
+  .
+
+pulsatrix:Creator
+  a owl:Class ;
+  owl:equivalentClass [
+    a owl:Class ;
+    owl:intersectionOf (
+      pulsatrix:Contribution
+      [
+        a owl:Restriction ;
+        owl:onProperty pulsatrix:isCategorizedBy ;
+        owl:someValuesFrom pulsatrix:CreationContribution ;
+      ]
+    ) ;
+  ] ;
+  skos:definition "The creators contribution to work or idea." ;
+  skos:prefLabel "Creator" ;
+  .
+
+pulsatrix:Endeavor
   a owl:Class ;
   skos:prefLabel "Endeavor" ;
   .
 
-:Concept
+pulsatrix:Expression
   a owl:Class ;
-  skos:prefLabel "Concept" ;
-  skos:definition "An abstract, unifying idea or theme." ;
-  .
-
-openwemi:Work
-  rdfs:subClassOf :Work ;
-  .
-
-:Work
-  a owl:Class ;
-  skos:prefLabel "Work" ;
-  skos:definition "An abstract notion of an artistic or intellectual creation." ;
   owl:equivalentClass [
     a owl:Class ;
     owl:intersectionOf (
       [
         a owl:Class ;
         owl:unionOf (
-          :Endeavor
-          :Concept
-        )
-      ]
-      [
-        a owl:Restriction ;
-        owl:onProperty dct:contribution ;
-        owl:someValuesFrom :Creator ;
-      ]
-
-    )
-  ] ;
-  rdfs:subClassOf [
-    a owl:Restriction ;
-    owl:onProperty :subject ;
-    owl:someValuesFrom :Subject ;
-    rdfs:comment "The aboutness of the Endeavor usually belongs on the work." ;
-  ]
-  .
-
-openwemi:Expression
-  rdfs:subClassOf :Expression ;
-.
-
-:Expression
-  a owl:Class ;
-  skos:prefLabel "Expression" ;
-  skos:definition """Endeavors are made tangible through some kind of expression, such as text, sound, or a visual form. There may be more than one expression of a work of the same type or of different types."""@en ;
-  owl:equivalentClass [
-    a owl:Class ;
-    owl:intersectionOf (
-      [
-        a owl:Class ;
-        owl:unionOf (
-          :Endeavor
-          :Concept
-        )
-      ]
-      [
-        a owl:Class ;
-        owl:unionOf (
-          [
-            a owl:Restriction ;
-            owl:onProperty dcterms:media ;
-            owl:someValuesFrom xsd:string ;
-          ]
-          [
-            a owl:Restriction ;
-            owl:onProperty dcterms:type ;
-            owl:someValuesFrom dcterms:DCMIType ;
-            rdfs:comment "This isn't absolutely correct" ;
-          ]
-          [
-            a owl:Restriction ;
-            owl:onProperty dc:type ;
-            owl:someValuesFrom xsd:string ;
-          ]
-        )
-      ]
-    ) ;
-  ] ;
-  .
-
-openwemi:Manifestation
-  rdfs:subClassOf :Manifestation ;
-  .
-:Manifestation
-  a owl:Class ;
-  skos:prefLabel "Manifestation" ;
-  skos:definition "A manifestation is an Endeavor that has been realized in some physical or digital form. A manifestation may be a single realization or a realization that is produced in multiple copies such as the publication of a music compact disk or the manufacture of a shirt."@en ;
-  owl:equivalentClass [
-    a owl:Class ;
-    owl:intersectionOf (
-      [
-        a owl:Class ;
-        owl:unionOf (
-          :Endeavor
-          :Concept
-        )
-      ]
-      [
-        a owl:Restriction ;
-        owl:onProperty :publicationDate ;
-        owl:someValuesFrom xsd:date ;
-      ]
-      [
-        a owl:Restriction ;
-        owl:onProperty :publishedBy ;
-        owl:someValuesFrom :Agent ;
-      ]
-    )
-  ] ;
-  rdfs:subClassOf [
-    a owl:Restriction ;
-    owl:onProperty :language ;
-    owl:someValuesFrom :Language ;
-  ], [
-    a owl:Restriction ;
-    owl:onProperty :placeOfPublication ;
-    owl:someValuesFrom :GeographicLocation ;
-  ] ;
-  .
-openwemi:Item
-  rdfs:subClassOf :Item ;
-  .
-:Item
-  a owl:Class ;
-  skos:prefLabel "Item" ;
-  skos:definition "An Item is a single instance of an Endeavor, something that can have a place on a shelf or a location online."@en ;
-  owl:equivalentClass [
-    a owl:Class ;
-    owl:intersectionOf (
-      [
-        a owl:Class ;
-        owl:unionOf (
-          :Endeavor
-          :SpatialUnit
+          pulsatrix:Endeavor
+          pulsatrix:Concept
         ) ;
       ]
       [
-        a owl:Restriction ;
-        owl:onProperty :hasLocation ;
-        owl:someValuesFrom [
-          a owl:Class ;
-          owl:unionOf (
-            :GeographicLocation
-            :InternetLocation
-          )
-        ]
+        a owl:Class ;
+        owl:unionOf (
+          [
+            a owl:Restriction ;
+            owl:onProperty dct:media ;
+            owl:someValuesFrom xs:string ;
+          ]
+          [
+            a owl:Restriction ;
+            rdfs:comment "This isn't absolutely correct" ;
+            owl:onProperty dct:type ;
+            owl:someValuesFrom dct:DCMIType ;
+          ]
+          [
+            a owl:Restriction ;
+            owl:onProperty dct:type ;
+            owl:someValuesFrom xs:string ;
+          ]
+        ) ;
       ]
-    )
+    ) ;
   ] ;
+  skos:definition "Endeavors are made tangible through some kind of expression, such as text, sound, or a visual form. There may be more than one expression of a work of the same type or of different types."@en ;
+  skos:prefLabel "Expression" ;
   .
 
-:SpatialUnit
-  a owl:Class ;
-  skos:prefLabel "Spatial Unit" ;
-  skos:definition "Any object that takes up physical space. Both handled items and objects as well as geographic features and administrative locales." ;
+pulsatrix:FinancialContribution
+  rdfs:subClassOf pulsatrix:ContributionCategory ;
+  skos:prefLabel "Financial Contribution" ;
   .
 
-:InternetLocation
+pulsatrix:GeographicLocation
   a owl:Class ;
-  skos:prefLabel "Internet Location" ;
-  skos:definition "a location for something on the internet" ;
-  .
-
-:GeographicLocation
-  a owl:Class ;
-  skos:prefLabel "Geographic Location" ;
-  skos:definition "A point that can be placed on a map" ;
   owl:equivalentClass [
     a owl:Class ;
     owl:intersectionOf (
-      :SpatialUnit
+      pulsatrix:SpatialUnit
       [
         a owl:Class ;
         owl:unionOf (
@@ -199,133 +169,188 @@ openwemi:Item
             owl:intersectionOf (
               [
                 a owl:Restriction ;
-                owl:onProperty :latitude ;
-                owl:someValuesFrom xsd:double ;
+                owl:onProperty pulsatrix:latitude ;
+                owl:someValuesFrom xs:double ;
               ]
               [
                 a owl:Restriction ;
-                owl:onProperty :longitude ;
-                owl:someValuesFrom xsd:double ;
+                owl:onProperty pulsatrix:longitude ;
+                owl:someValuesFrom xs:double ;
               ]
-            )
+            ) ;
           ]
           [
             a owl:Restriction ;
-            owl:onProperty :hasArea ;
-            owl:someValuesFrom :Area ;
+            owl:onProperty pulsatrix:hasArea ;
+            owl:someValuesFrom pulsatrix:GeoPolygon ;
           ]
-        )
+        ) ;
       ]
-    )
+    ) ;
   ] ;
-.
+  skos:definition "A point that can be placed on a map" ;
+  skos:prefLabel "Geographic Location" ;
+  .
 
-:Contribution
+  pulsatrix:GeoPolygon
+     a owl:Class ;
+    owl:equivalentClass [
+      a owl:Class ;
+      owl:intersectionOf (
+        pulsatrix:SpatialUnit
+        [
+          a owl:Restriction ;
+          owl:onProperty pulsatrix:coordinates ;
+          owl:someValuesFrom rdf:List ;
+        ]
+      )
+    ] ;
+    skos:prefLAbel "Geographic Polygon" ;
+    skos:definition "A geographically located place with a list of coordinates" ;
+  .
+
+pulsatrix:InternetLocation
   a owl:Class ;
-  skos:prefLabel "Contribution" ;
-  skos:definition "A contribution relationship to an item." ;
+  skos:definition "a location for something on the internet" ;
+  skos:prefLabel "Internet Location" ;
+  .
+
+pulsatrix:Item
+  a owl:Class ;
   owl:equivalentClass [
     a owl:Class ;
     owl:intersectionOf (
-      :Concept
       [
-        a owl:Restriction ;
-        owl:onProperty :role ;
-        owl:someValuesFrom rel:Relator ;
+        a owl:Class ;
+        owl:unionOf (
+          pulsatrix:Endeavor
+          pulsatrix:SpatialUnit
+        ) ;
       ]
       [
         a owl:Restriction ;
-        owl:onProperty :agent ;
-        owl:someValuesFrom :Agent ;
+        owl:onProperty pulsatrix:hasLocation ;
+        owl:someValuesFrom [
+          a owl:Class ;
+          owl:unionOf (
+            pulsatrix:GeographicLocation
+            pulsatrix:InternetLocation
+          ) ;
+        ] ;
       ]
-    )
+    ) ;
   ] ;
+  skos:definition "An Item is a single instance of an Endeavor, something that can have a place on a shelf or a location online."@en ;
+  skos:prefLabel "Item" ;
   .
 
-:Creator
+pulsatrix:Manifestation
   a owl:Class ;
-  skos:prefLabel "Creator" ;
-  skos:definition "The creators contribution to work or idea." ;
+  rdfs:subClassOf
+    [
+      a owl:Restriction ;
+      owl:onProperty pulsatrix:language ;
+      owl:someValuesFrom dct:LinguisticSystem ;
+    ] ,
+    [
+      a owl:Restriction ;
+      owl:onProperty pulsatrix:placeOfPublication ;
+      owl:someValuesFrom pulsatrix:GeographicLocation ;
+    ]
+    ;
   owl:equivalentClass [
     a owl:Class ;
     owl:intersectionOf (
-      :Contribution
+      [
+        a owl:Class ;
+        owl:unionOf (
+          pulsatrix:Endeavor
+          pulsatrix:Concept
+        ) ;
+      ]
       [
         a owl:Restriction ;
-        owl:onProperty :isCategorizedBy ;
-        owl:someValuesFrom :CreationContribution ;
+        owl:onProperty pulsatrix:publicationDate ;
+        owl:someValuesFrom xs:date ;
       ]
-    )
-  ]
+      [
+        a owl:Restriction ;
+        owl:onProperty pulsatrix:publishedBy ;
+        owl:someValuesFrom pulsatrix:Agent ;
+      ]
+    ) ;
+  ] ;
+  skos:definition "A manifestation is an Endeavor that has been realized in some physical or digital form. A manifestation may be a single realization or a realization that is produced in multiple copies such as the publication of a music compact disk or the manufacture of a shirt."@en ;
+  skos:prefLabel "Manifestation" ;
   .
 
-:Category
-  rdfs:subClassOf :Concept ;
-  skos:prefLabel "Category" ;
-  skos:definition "A larger group that something can be classified with.";
-  .
-
-:Subject
-  rdfs:subClassOf :Category ;
-  skos:prefLabel "Subject" ;
-  skos:definition "The topic and nature of what the Endeavor contains." ;
-  .
-
-:ContributionCategory
-  rdfs:subClassOf :Category ;
-  skos:prefLabel "Contribution Category" ;
-  skos:definition "The taxonomy for how the agent contributed to the Endeavor." ;
-.
-
-:CreationContribution
-  rdfs:subClassOf :ContributionCategory ;
-  skos:prefLabel "Creation Contribution" ;
-  .
-
-:AdvisoryContribution
-  rdfs:subClassOf :ContributionCategory ;
-  skos:prefLabel "Advisory Contribution" ;
-  .
-:TransformationContribution
-  rdfs:subClassOf :ContributionCategory ;
-  skos:prefLabel "Transformation Contribution" ;
-  skos:definition "A transformation is a substantial alteration of the work, but does not lead to the level of creator or co-creator. An example would be a translator." ;
-  .
-
-:FinancialContribution
-  rdfs:subClassOf :ContributionCategory ;
-  skos:prefLabel "Financial Contribution" ;
-.
-
-
-:Agent
-  a owl:Class ;
-  skos:prefLabel "Agent" ;
-  skos:defintion "an active party in participating in some activity." ;
-  .
-:Organization
-  rdfs:subClassOf :Agent ;
+pulsatrix:Organization
+  rdfs:subClassOf pulsatrix:Agent ;
   skos:prefLabel "Organization" ;
   .
-:Person
-  rdfs:subClassOf :Agent ;
+
+pulsatrix:Person
+  rdfs:subClassOf pulsatrix:Agent ;
   skos:prefLabel "Person" ;
   .
 
-dct:contribution
+pulsatrix:SpatialUnit
+  a owl:Class ;
+  skos:definition "Any object that takes up physical space. Both handled items and objects as well as geographic features and administrative locales." ;
+  skos:prefLabel "Spatial Unit" ;
+  .
+
+pulsatrix:Subject
+  rdfs:subClassOf pulsatrix:Category ;
+  skos:definition "The topic and nature of what the Endeavor contains." ;
+  skos:prefLabel "Subject" ;
+  .
+
+pulsatrix:TransformationContribution
+  rdfs:subClassOf pulsatrix:ContributionCategory ;
+  skos:definition "A transformation is a substantial alteration of the work, but does not lead to the level of creator or co-creator. An example would be a translator." ;
+  skos:prefLabel "Transformation Contribution" ;
+  .
+
+pulsatrix:Work
+  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    rdfs:comment "The aboutness of the Endeavor usually belongs on the work." ;
+    owl:onProperty pulsatrix:subject ;
+    owl:someValuesFrom pulsatrix:Subject ;
+  ] ;
+  owl:equivalentClass [
+    a owl:Class ;
+    owl:intersectionOf (
+      [
+        a owl:Class ;
+        owl:unionOf (
+          pulsatrix:Endeavor
+          pulsatrix:Concept
+        ) ;
+      ]
+      [
+        a owl:Restriction ;
+        owl:onProperty dct:contribution ;
+        owl:someValuesFrom pulsatrix:Creator ;
+      ]
+    ) ;
+  ] ;
+  skos:definition "An abstract notion of an artistic or intellectual creation." ;
+  skos:prefLabel "Work" ;
+  .
+
+pulsatrix:agent
   a owl:ObjectProperty ;
   .
 
-:role
+pulsatrix:role
   a owl:ObjectProperty ;
-.
-
-:subject
-  a owl:ObjectProperty ;
-  rdfs:range :Subject ;
   .
 
-:agent
+pulsatrix:subject
   a owl:ObjectProperty ;
+  rdfs:range pulsatrix:Subject ;
   .
 
