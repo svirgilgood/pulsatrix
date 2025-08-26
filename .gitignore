@@ -4,7 +4,4 @@ tools/serializer/
 # Remove the following line if the project needs a tools directory in source control
 tools/
 
-# We are excluding the serializer binary from source countrol
-tools/serializer/
-# Remove the following line if the project needs a tools directory in source control
-tools/
+.pulsatrix/*
